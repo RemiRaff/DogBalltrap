@@ -8,7 +8,7 @@ public class PlayerControllerX : MonoBehaviour
     public GameObject dogPrefab;
 
     private DateTime lastSpawnTime;
-    private DateTime maxSpawnDelay;
+    private TimeSpan minSpawnDelay = new TimeSpan(0, 0, 0, 0, 250);
 
     private void Start()
     {
@@ -21,13 +21,16 @@ public class PlayerControllerX : MonoBehaviour
         // On spacebar press, send dog
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            TimeSpan time = lastSpawnTime - DateTime.Now;
-            Debug.Log(time.ToString());
+            TimeSpan time = DateTime.Now - lastSpawnTime;
+            // Debug.Log(time.ToString());
 
-            // si c pluq que le delay on spawn et met à jour le temps
-            Instantiate(dogPrefab, transform.position, dogPrefab.transform.rotation);
-            lastSpawnTime = DateTime.Now;
-
+            // si c plus que le delay on spawn et met à jour le temps
+            // Autre façon de faire coroutine WaitForSeconds
+            if (minSpawnDelay < time)
+            {
+                Instantiate(dogPrefab, transform.position, dogPrefab.transform.rotation);
+                lastSpawnTime = DateTime.Now;
+            }
         }
     }
 }
